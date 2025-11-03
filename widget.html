@@ -323,6 +323,21 @@
                     const record = response.data[0];
                     const recordId = record.id;
                     
+                    // Verificar CNPJ
+                    const cnpj = record.cnpjbr_CNPJ;
+                    console.log("CNPJ encontrado:", cnpj);
+                    
+                    // Validar se CNPJ está preenchido
+                    if (!cnpj || cnpj.trim() === "") {
+                        // Remover loading
+                        button.classList.remove('loading');
+                        button.disabled = false;
+                        
+                        // Mostrar mensagem de erro
+                        mostrarMensagem('CNPJ não está preenchido! Preencha o CNPJ primeiro.', 'error', '❌');
+                        return;
+                    }
+                    
                     // Preparar dados para atualização
                     let updateData = {};
                     
@@ -340,6 +355,8 @@
                             "Account_Name": "Teste"  // Para Contacts, usa Account_Name
                         };
                     }
+                    
+                    console.log("Dados para atualizar:", updateData);
                     
                     // Atualizar registro no Zoho CRM
                     const config = {
@@ -372,8 +389,9 @@
                         button.classList.remove('loading');
                         button.disabled = false;
                         
-                        // Mostrar mensagem de erro
-                        mostrarMensagem('Erro ao atualizar o registro. Tente novamente.', 'error', '❌');
+                        // Mostrar mensagem de erro detalhada
+                        const errorMessage = error.message || 'Erro ao atualizar o registro. Tente novamente.';
+                        mostrarMensagem(errorMessage, 'error', '❌');
                     });
                     
                 }).catch(function(error) {
