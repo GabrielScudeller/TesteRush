@@ -323,6 +323,9 @@
                     const record = response.data[0];
                     const recordId = record.id;
                     
+                    console.log("ID do registro:", recordId);
+                    console.log("Entity:", entityName);
+                    
                     // Verificar CNPJ
                     const cnpj = record.cnpjbr_CNPJ;
                     console.log("CNPJ encontrado:", cnpj);
@@ -339,22 +342,10 @@
                     }
                     
                     // Preparar dados para atualização
-                    let updateData = {};
-                    
-                    // Definir o campo de acordo com o módulo
-                    if (entityName === "Leads") {
-                        updateData = {
-                            "Company": "Teste"  // Para Leads, usa o campo Company
-                        };
-                    } else if (entityName === "Accounts") {
-                        updateData = {
-                            "Account_Name": "Teste"  // Para Accounts, usa Account_Name
-                        };
-                    } else if (entityName === "Contacts") {
-                        updateData = {
-                            "Account_Name": "Teste"  // Para Contacts, usa Account_Name
-                        };
-                    }
+                    let updateData = {
+                        "id": recordId,  // IMPORTANTE: Incluir o ID
+                        "cnpjbr_Raz_o_Social": "TesteRush"  // Campo correto da Razão Social
+                    };
                     
                     console.log("Dados para atualizar:", updateData);
                     
@@ -373,7 +364,7 @@
                         button.disabled = false;
                         
                         // Mostrar mensagem de sucesso
-                        mostrarMensagem('Lead enriquecido com sucesso! Razão Social atualizada.', 'success', '✅');
+                        mostrarMensagem('Lead enriquecido com sucesso! Razão Social atualizada para "TesteRush".', 'success', '✅');
                         
                         // Fechar o widget após 2 segundos
                         setTimeout(() => {
@@ -384,18 +375,27 @@
                         
                     }).catch(function(error) {
                         console.error("Erro ao atualizar registro:", error);
+                        console.error("Detalhes do erro:", JSON.stringify(error, null, 2));
                         
                         // Remover loading
                         button.classList.remove('loading');
                         button.disabled = false;
                         
                         // Mostrar mensagem de erro detalhada
-                        const errorMessage = error.message || 'Erro ao atualizar o registro. Tente novamente.';
+                        let errorMessage = 'Erro ao atualizar o registro.';
+                        
+                        if (error.details && error.details.length > 0) {
+                            errorMessage += ' Detalhes: ' + JSON.stringify(error.details);
+                        } else if (error.message) {
+                            errorMessage = error.message;
+                        }
+                        
                         mostrarMensagem(errorMessage, 'error', '❌');
                     });
                     
                 }).catch(function(error) {
                     console.error("Erro ao obter registro:", error);
+                    console.error("Detalhes do erro:", JSON.stringify(error, null, 2));
                     
                     // Remover loading
                     button.classList.remove('loading');
