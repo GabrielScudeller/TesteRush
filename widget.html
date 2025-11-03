@@ -276,8 +276,8 @@
                 
                 const record = response.data[0];
                 
-                // Tentar encontrar o campo CNPJ (ajuste conforme seu CRM)
-                const cnpj = record.CNPJ || record.Tax_ID || record.Company_ID || "Não informado";
+                // Usar o nome correto da API do campo CNPJ
+                const cnpj = record.cnpjbr_CNPJ || "Não informado";
                 
                 document.getElementById('cnpjValue').textContent = cnpj;
                 
