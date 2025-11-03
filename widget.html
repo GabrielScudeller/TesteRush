@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZPlugin LeadRush</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .logo {
+            margin-bottom: 30px;
+        }
+        
+        .logo h1 {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+        
+        .logo p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+        
+        .divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, #e5e7eb, transparent);
+            margin: 30px 0;
+        }
+        
+        .info-box {
+            background-color: #f3f4f6;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .info-box h3 {
+            color: #1f2937;
+            font-size: 16px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .info-box p {
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .enrich-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 16px 32px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .enrich-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        
+        .enrich-button:active:not(:disabled) {
+            transform: translateY(0);
+        }
+        
+        .enrich-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        
+        .enrich-button .button-text {
+            display: inline-block;
+            transition: opacity 0.3s ease;
+        }
+        
+        .enrich-button.loading .button-text {
+            opacity: 0;
+        }
+        
+        .loader {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .enrich-button.loading .loader {
+            display: block;
+        }
+        
+        .loader-spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid white;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .message {
+            margin-top: 20px;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .message.success {
+            background-color: #d1fae5;
+            color: #065f46;
+            border: 1px solid #6ee7b7;
+        }
+        
+        .message.error {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+        
+        .message-icon {
+            display: inline-block;
+            margin-right: 8px;
+            font-size: 18px;
+        }
+        
+        .cnpj-display {
+            background-color: #f9fafb;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .cnpj-display p {
+            color: #374151;
+            font-size: 13px;
+            margin: 4px 0;
+        }
+        
+        .cnpj-display strong {
+            color: #1f2937;
+            font-weight: 600;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+            color: #9ca3af;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <h1>ZPlugin LeadRush</h1>
+            <p>Enriquecimento Inteligente de Leads</p>
+        </div>
+        
+        <div class="divider"></div>
+        
+        <div class="info-box">
+            <h3>📊 Como Funciona</h3>
+            <p>Clique no botão abaixo para enriquecer automaticamente os dados deste lead com base no CNPJ informado.</p>
+        </div>
+        
+        <div class="cnpj-display" id="cnpjDisplay">
+            <p><strong>CNPJ:</strong> <span id="cnpjValue">-</span></p>
+            <p><strong>Módulo:</strong> <span id="moduleValue">-</span></p>
+        </div>
+        
+        <button class="enrich-button" id="enrichButton" onclick="enriquecerLead()">
+            <span class="button-text">🚀 Enriquecer Lead</span>
+            <div class="loader">
+                <div class="loader-spinner"></div>
+            </div>
+        </button>
+        
+        <div class="message" id="message">
+            <span class="message-icon"></span>
+            <span class="message-text"></span>
+        </div>
+        
+        <div class="footer">
+            <p>Powered by ZPlugin LeadRush © 2025</p>
+        </div>
+    </div>
+
+    <script src="https://live.zwidgets.com/js-sdk/1.2/ZohoEmbededAppSDK.min.js"></script>
+    <script>
+        let entityData = null;
+        let entityName = null;
+
+        // Inicializar SDK do Zoho CRM
+        ZOHO.embeddedApp.on("PageLoad", function(data) {
+            console.log("Widget carregado:", data);
+            entityData = data;
+            entityName = data.Entity;
+            
+            // Exibir informações do módulo
+            document.getElementById('moduleValue').textContent = entityName;
+            document.getElementById('cnpjDisplay').style.display = 'block';
+            
+            // Tentar obter o CNPJ do registro
+            obterCNPJ();
+        });
+
+        ZOHO.embeddedApp.init();
+
+        // Função para obter CNPJ do registro atual
+        function obterCNPJ() {
+            ZOHO.CRM.API.getRecord({
+                Entity: entityName,
+                approved: "both"
+            }).then(function(response) {
+                console.log("Dados do registro:", response);
+                
+                const record = response.data[0];
+                
+                // Tentar encontrar o campo CNPJ (ajuste conforme seu CRM)
+                const cnpj = record.CNPJ || record.Tax_ID || record.Company_ID || "Não informado";
+                
+                document.getElementById('cnpjValue').textContent = cnpj;
+                
+            }).catch(function(error) {
+                console.error("Erro ao obter registro:", error);
+                document.getElementById('cnpjValue').textContent = "Erro ao carregar";
+            });
+        }
+
+        // Função para mostrar mensagem
+        function mostrarMensagem(texto, tipo, icon) {
+            const messageDiv = document.getElementById('message');
+            const messageIcon = messageDiv.querySelector('.message-icon');
+            const messageText = messageDiv.querySelector('.message-text');
+            
+            messageIcon.textContent = icon;
+            messageText.textContent = texto;
+            messageDiv.className = 'message ' + tipo;
+            messageDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Função principal para enriquecer lead
+        function enriquecerLead() {
+            const button = document.getElementById('enrichButton');
+            
+            // Adicionar classe loading
+            button.classList.add('loading');
+            button.disabled = true;
+            
+            // Simular processamento (2 segundos)
+            setTimeout(() => {
+                // Obter o registro atual
+                ZOHO.CRM.API.getRecord({
+                    Entity: entityName,
+                    approved: "both"
+                }).then(function(response) {
+                    console.log("Registro obtido:", response);
+                    
+                    const record = response.data[0];
+                    const recordId = record.id;
+                    
+                    // Preparar dados para atualização
+                    let updateData = {};
+                    
+                    // Definir o campo de acordo com o módulo
+                    if (entityName === "Leads") {
+                        updateData = {
+                            "Company": "Teste"  // Para Leads, usa o campo Company
+                        };
+                    } else if (entityName === "Accounts") {
+                        updateData = {
+                            "Account_Name": "Teste"  // Para Accounts, usa Account_Name
+                        };
+                    } else if (entityName === "Contacts") {
+                        updateData = {
+                            "Account_Name": "Teste"  // Para Contacts, usa Account_Name
+                        };
+                    }
+                    
+                    // Atualizar registro no Zoho CRM
+                    const config = {
+                        Entity: entityName,
+                        APIData: updateData,
+                        Trigger: ["workflow"]
+                    };
+                    
+                    ZOHO.CRM.API.updateRecord(config).then(function(updateResponse) {
+                        console.log("Registro atualizado com sucesso:", updateResponse);
+                        
+                        // Remover loading
+                        button.classList.remove('loading');
+                        button.disabled = false;
+                        
+                        // Mostrar mensagem de sucesso
+                        mostrarMensagem('Lead enriquecido com sucesso! Razão Social atualizada.', 'success', '✅');
+                        
+                        // Fechar o widget após 2 segundos
+                        setTimeout(() => {
+                            ZOHO.CRM.UI.Popup.close().then(function(data) {
+                                console.log("Popup fechado");
+                            });
+                        }, 2000);
+                        
+                    }).catch(function(error) {
+                        console.error("Erro ao atualizar registro:", error);
+                        
+                        // Remover loading
+                        button.classList.remove('loading');
+                        button.disabled = false;
+                        
+                        // Mostrar mensagem de erro
+                        mostrarMensagem('Erro ao atualizar o registro. Tente novamente.', 'error', '❌');
+                    });
+                    
+                }).catch(function(error) {
+                    console.error("Erro ao obter registro:", error);
+                    
+                    // Remover loading
+                    button.classList.remove('loading');
+                    button.disabled = false;
+                    
+                    // Mostrar mensagem de erro
+                    mostrarMensagem('Erro ao obter dados do registro.', 'error', '❌');
+                });
+            }, 2000); // 2 segundos de loading
+        }
+    </script>
+</body>
+</html>
